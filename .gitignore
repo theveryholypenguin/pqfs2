@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+# never commit key material or generated tickets
+*.id
+*.ticket.json
+*.receipts.json
+*.rel
+relay-store/
+r1/
+r2/
+r3/
+inbox*/
+.pqfs2/
+_oqs/

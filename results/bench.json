@@ -1,0 +1,220 @@
+{
+ "kem": {
+  "X25519": {
+   "pk_B": 32,
+   "ct_B": 32,
+   "keygen_ms": 0.034,
+   "encaps_ms": 0.075,
+   "decaps_ms": 0.067
+  },
+  "ML-KEM-768": {
+   "pk_B": 1184,
+   "ct_B": 1088,
+   "keygen_ms": 0.019,
+   "encaps_ms": 0.018,
+   "decaps_ms": 0.022
+  },
+  "ML-KEM-1024": {
+   "pk_B": 1568,
+   "ct_B": 1568,
+   "keygen_ms": 0.02,
+   "encaps_ms": 0.022,
+   "decaps_ms": 0.025
+  },
+  "HQC-192": {
+   "pk_B": 4514,
+   "ct_B": 8978,
+   "keygen_ms": 3.998,
+   "encaps_ms": 7.282,
+   "decaps_ms": 13.472
+  },
+  "HQC-256": {
+   "pk_B": 7237,
+   "ct_B": 14421,
+   "keygen_ms": 10.527,
+   "encaps_ms": 20.344,
+   "decaps_ms": 40.986
+  }
+ },
+ "sig": {
+  "ed25519": {
+   "pk_B": 32,
+   "sig_B": 64,
+   "sign_ms": 0.097,
+   "verify_ms": 0.09
+  },
+  "ML-DSA-65": {
+   "pk_B": 1952,
+   "sig_B": 3309,
+   "sign_ms": 0.128,
+   "verify_ms": 0.052
+  },
+  "SLH-DSA-SHA2-128f": {
+   "pk_B": 32,
+   "sig_B": 17088,
+   "sign_ms": 31.164,
+   "verify_ms": 2.224
+  },
+  "SLH-DSA-SHA2-128s": {
+   "pk_B": 32,
+   "sig_B": 7856,
+   "sign_ms": 538.63,
+   "verify_ms": 0.445
+  }
+ },
+ "tiers": {
+  "T1": {
+   "suite": [
+    "X25519",
+    "ML-KEM-768"
+   ],
+   "n": 1,
+   "t": 1,
+   "ct_bytes": 1120,
+   "encaps_ms": 0.104,
+   "decaps_ms": 0.101
+  },
+  "T2": {
+   "suite": [
+    "X25519",
+    "ML-KEM-768",
+    "HQC-192"
+   ],
+   "n": 3,
+   "t": 2,
+   "ct_bytes": 10098,
+   "encaps_ms": 9.648,
+   "decaps_ms": 14.779
+  },
+  "T3": {
+   "suite": [
+    "X25519",
+    "ML-KEM-1024",
+    "HQC-256"
+   ],
+   "n": 5,
+   "t": 3,
+   "ct_bytes": 16021,
+   "encaps_ms": 23.074,
+   "decaps_ms": 35.287
+  }
+ },
+ "throughput": [
+  {
+   "size_B": 10485,
+   "pkg_B": 38093,
+   "overhead_pct": 263.31,
+   "encrypt_s": 0.001,
+   "decrypt_s": 0.0,
+   "enc_MBps": 9.8,
+   "dec_MBps": 85.0
+  },
+  {
+   "size_B": 104857,
+   "pkg_B": 133855,
+   "overhead_pct": 27.65,
+   "encrypt_s": 0.002,
+   "decrypt_s": 0.001,
+   "enc_MBps": 53.7,
+   "dec_MBps": 160.0
+  },
+  {
+   "size_B": 1048576,
+   "pkg_B": 1076162,
+   "overhead_pct": 2.63,
+   "encrypt_s": 0.006,
+   "decrypt_s": 0.007,
+   "enc_MBps": 154.6,
+   "dec_MBps": 147.7
+  },
+  {
+   "size_B": 10485760,
+   "pkg_B": 10515653,
+   "overhead_pct": 0.29,
+   "encrypt_s": 0.056,
+   "decrypt_s": 0.065,
+   "enc_MBps": 177.5,
+   "dec_MBps": 153.4
+  },
+  {
+   "size_B": 52428800,
+   "pkg_B": 52468933,
+   "overhead_pct": 0.08,
+   "encrypt_s": 0.268,
+   "decrypt_s": 0.334,
+   "enc_MBps": 186.3,
+   "dec_MBps": 149.6
+  }
+ ],
+ "shamir": {
+  "2-of-3": {
+   "split_ms": 0.026,
+   "combine_ms": 0.012
+  },
+  "3-of-5": {
+   "split_ms": 0.047,
+   "combine_ms": 0.016
+  },
+  "6-of-10": {
+   "split_ms": 0.163,
+   "combine_ms": 0.029
+  },
+  "16-of-32": {
+   "split_ms": 1.366,
+   "combine_ms": 0.121
+  }
+ },
+ "merkle": {
+  "16": {
+   "proof_len": 4,
+   "proof_B": 128,
+   "root_ms": 0.017,
+   "cons_len": 1
+  },
+  "256": {
+   "proof_len": 8,
+   "proof_B": 256,
+   "root_ms": 0.335,
+   "cons_len": 1
+  },
+  "4096": {
+   "proof_len": 12,
+   "proof_B": 384,
+   "root_ms": 5.09,
+   "cons_len": 1
+  }
+ },
+ "slot_json_bytes_T3": 21523,
+ "padme": [
+  {
+   "len": 4097,
+   "padded": 4352,
+   "pct": 6.22
+  },
+  {
+   "len": 10000,
+   "padded": 10240,
+   "pct": 2.4
+  },
+  {
+   "len": 100000,
+   "padded": 100352,
+   "pct": 0.35
+  },
+  {
+   "len": 1300055,
+   "padded": 1310720,
+   "pct": 0.82
+  },
+  {
+   "len": 10000000,
+   "padded": 10223616,
+   "pct": 2.24
+  },
+  {
+   "len": 100000000,
+   "padded": 100663296,
+   "pct": 0.66
+  }
+ ]
+}

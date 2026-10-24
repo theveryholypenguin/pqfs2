@@ -1,0 +1,27 @@
+liboqs-python faulthandler is disabled
+Selftest
+  [PASS] shamir 1-of-1 reconstructs
+  [PASS] shamir 2-of-3 reconstructs
+  [PASS] shamir 3-of-5 reconstructs
+  [PASS] shamir 7-of-7 reconstructs
+  [PASS] shamir t-1 shares give a wrong key
+  [PASS] padme never shrinks / <=12% overhead
+  [PASS] merkle inclusion + consistency (size 1)
+  [PASS] merkle inclusion + consistency (size 2)
+  [PASS] merkle inclusion + consistency (size 3)
+  [PASS] merkle inclusion + consistency (size 5)
+  [PASS] merkle inclusion + consistency (size 8)
+  [PASS] merkle inclusion + consistency (size 13)
+  [PASS] merkle inclusion + consistency (size 21)
+  [PASS] merkle inclusion + consistency (size 50)
+  [PASS] merkle detects rewritten history
+  [PASS] hybrid KEM roundtrip ['X25519', 'ML-KEM-768', 'HQC-192']
+  [PASS] tampered lattice ciphertext changes the key
+  [PASS] different context/suite changes the key
+  [PASS] hybrid KEM roundtrip ['X25519', 'ML-KEM-1024', 'HQC-256']
+  [PASS] tampered lattice ciphertext changes the key
+  [PASS] different context/suite changes the key
+  [PASS] hybrid signature ok
+  [PASS] hybrid signature rejects other message
+  [PASS] SLH-DSA-SHA2-128f sign/verify
+Selftest OK (24 checks)

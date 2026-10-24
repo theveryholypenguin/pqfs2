@@ -1,0 +1,173 @@
+liboqs-python faulthandler is disabled
+
+===== Setup: 3 relays + identities (alice=sender, bob/carol/dave=custodians) =====
+[KEYGEN] generating X25519 + ML-KEM-768/1024 + HQC-192/256 + Ed25519 + ML-DSA-65 ...
+[KEYGEN] private (encrypted): alice.id
+[KEYGEN] public bundle      : alice.pub   (share this)
+[KEYGEN] fingerprint        : c182bf61 e7af4b31 25715fff e26b1fd9   (compare out-of-band)
+[KEYGEN] generating X25519 + ML-KEM-768/1024 + HQC-192/256 + Ed25519 + ML-DSA-65 ...
+[KEYGEN] private (encrypted): bob.id
+[KEYGEN] public bundle      : bob.pub   (share this)
+[KEYGEN] fingerprint        : a117d819 6b0b2085 708fcd33 370756dc   (compare out-of-band)
+[KEYGEN] generating X25519 + ML-KEM-768/1024 + HQC-192/256 + Ed25519 + ML-DSA-65 ...
+[KEYGEN] private (encrypted): carol.id
+[KEYGEN] public bundle      : carol.pub   (share this)
+[KEYGEN] fingerprint        : 91ef6ca6 156c2196 8bb04f4a c5b17735   (compare out-of-band)
+[KEYGEN] generating X25519 + ML-KEM-768/1024 + HQC-192/256 + Ed25519 + ML-DSA-65 ...
+[KEYGEN] private (encrypted): dave.id
+[KEYGEN] public bundle      : dave.pub   (share this)
+[KEYGEN] fingerprint        : ab34b1a6 3d2e8c0a c310ef59 5ff421ba   (compare out-of-band)
+[TRUST] trusted alice  c182bf61 e7af4b31 25715fff e26b1fd9
+
+===== Feature 4: shelf-life policy engine (dry run) =====
+exposure score 100/100  ->  tier T3 (T3-longterm)
+  - must stay secret 30 years -> +55
+  - filename looks like key/credential material -> +25
+  - filename suggests bulk data/backup -> +10
+  - content contains a PEM private key -> +30
+suite ['X25519', 'ML-KEM-1024', 'HQC-256'], default 3-of-5 shares
+
+===== Features 1,2,5,6: send (hybrid X25519+ML-KEM+HQC, 3-of-5 shares over 3 relays) =====
+[POLICY] exposure score 100/100 -> policy tier T3
+[POLICY]   must stay secret 30 years -> +55
+[POLICY]   filename looks like key/credential material -> +25
+[POLICY]   filename suggests bulk data/backup -> +10
+[POLICY]   content contains a PEM private key -> +30
+[PIN] pinned relay 127.0.0.1:45347 key 4f316ec1 8eb7709d ea95b709 2ed67dcb (verify out-of-band!)
+[PIN] pinned relay 127.0.0.1:38689 key 1d164838 5005a4b8 fc8b4354 fb254b1c (verify out-of-band!)
+[PIN] pinned relay 127.0.0.1:36835 key c90f322c bb392403 aa77a575 1cce06bf (verify out-of-band!)
+[SEND] suite ['X25519', 'ML-KEM-1024', 'HQC-256']; 3-of-5 shares over 3 relay(s); custodian(s): bob
+[SEND] file 1300055 B padded to 1310720 B (Padme), 20 equal chunks
+[SEND] 127.0.0.1:45347: ciphertext stored (log #0)
+[SEND] 127.0.0.1:45347: stored 2 slot(s) epoch 1 (log #1)
+[SEND] 127.0.0.1:38689: stored 2 slot(s) epoch 1 (log #0)
+[SEND] 127.0.0.1:36835: stored 1 slot(s) epoch 1 (log #0)
+[SEND] ticket  : t30.ticket.json   (send this to the recipient over any channel)
+[SEND] receipts: t30.receipts.json   (4 log receipts, all valid)
+[SEND] security: < 3 relays learn nothing about the key (information-theoretic); breaking every KEM would additionally need >= 3 relays' data.
+
+===== Receive (bob), with verified access receipts =====
+[RECV] 127.0.0.1:45347: 1 slot bundle(s); access logged (log entry #2)
+[RECV] 127.0.0.1:38689: 1 slot bundle(s); access logged (log entry #1)
+[RECV] 127.0.0.1:36835: 1 slot bundle(s); access logged (log entry #1)
+[RECV] key recovered: epoch 1, tier T3, suite ['X25519', 'ML-KEM-1024', 'HQC-256'], 3-of-5
+[RECV] sender verified: alice (c182bf61 e7af4b31 25715fff e26b1fd9)
+[RECV] file 'wallet-backup.key' 1300055 bytes, signed by alice (Ed25519 + ML-DSA-65 valid)
+[RECV] decrypted chunk 20/20
+[RECV] INTEGRITY: every chunk authenticated, ciphertext + plaintext hashes match the signed manifest  ✔
+[RECV] saved to inbox/wallet-backup.key
+  -> byte-for-byte identical to the original
+
+===== Feature 5: transparency-log receipts verify offline =====
+[RECEIPT] PKG_PUT   log#0    relay 127.0.0.1:45347 (pinned): OK - inclusion proof + signature valid
+[RECEIPT] SLOTS_PUT log#1    relay 127.0.0.1:45347 (pinned): OK - inclusion proof + signature valid
+[RECEIPT] SLOTS_PUT log#0    relay 127.0.0.1:38689 (pinned): OK - inclusion proof + signature valid
+[RECEIPT] SLOTS_PUT log#0    relay 127.0.0.1:36835 (pinned): OK - inclusion proof + signature valid
+
+===== Metadata privacy: what a relay actually stores =====
+  package on disk: 1338389 bytes for a 1300055-byte file (Padme-padded)
+  filename visible in stored package? False   sender name visible? False
+
+===== Tamper test: flip 1 byte of the stored ciphertext =====
+[RECV] 127.0.0.1:45347: 1 slot bundle(s); access logged (log entry #3)
+[RECV] 127.0.0.1:38689: 1 slot bundle(s); access logged (log entry #2)
+[RECV] 127.0.0.1:36835: 1 slot bundle(s); access logged (log entry #2)
+[RECV] key recovered: epoch 1, tier T3, suite ['X25519', 'ML-KEM-1024', 'HQC-256'], 3-of-5
+[RECV] sender verified: alice (c182bf61 e7af4b31 25715fff e26b1fd9)
+[RECV] file 'wallet-backup.key' 1300055 bytes, signed by alice (Ed25519 + ML-DSA-65 valid)
+  -> rejected as expected: chunk 11/20 failed authentication (tampered)
+
+===== Feature 2: the tool refuses a topology where one relay could hold t shares =====
+[POLICY] exposure score 59/100 -> policy tier T2
+[POLICY]   must stay secret 1 years -> +14
+[POLICY]   filename looks like key/credential material -> +25
+[POLICY]   filename suggests bulk data/backup -> +10
+[POLICY]   content contains a PEM private key -> +30
+  -> refused: topology too weak: 3 shares over 1 relay(s) puts up to 3 shares on one relay, but the threshold is 2. One compromised relay could then hold enough sha...
+
+===== Feature 3+4: crypto-agility. HQC-192 gets 'broken' -> audit -> auto rewrap =====
+[POLICY] exposure score 81/100 -> policy tier T3
+[POLICY]   must stay secret 5 years -> +36
+[POLICY]   filename looks like key/credential material -> +25
+[POLICY]   filename suggests bulk data/backup -> +10
+[POLICY]   content contains a PEM private key -> +30
+[WARN] --tier T2 is BELOW the policy recommendation T3
+[SEND] suite ['X25519', 'ML-KEM-768', 'HQC-192']; 2-of-3 shares over 3 relay(s); custodian(s): alice
+[SEND] file 1300055 B padded to 1310720 B (Padme), 20 equal chunks
+[SEND] 127.0.0.1:45347: ciphertext stored (log #4)
+[SEND] 127.0.0.1:45347: stored 1 slot(s) epoch 1 (log #5)
+[SEND] 127.0.0.1:38689: stored 1 slot(s) epoch 1 (log #3)
+[SEND] 127.0.0.1:36835: stored 1 slot(s) epoch 1 (log #3)
+[SEND] ticket  : t5.ticket.json   (send this to the recipient over any channel)
+[SEND] receipts: t5.receipts.json   (4 log receipts, all valid)
+[SEND] security: < 2 relays learn nothing about the key (information-theoretic); breaking every KEM would additionally need >= 2 relays' data.
+[POLICY] deprecated set is now: ['HQC-192']
+[AUDIT] t30.ticket.json: epoch 1, T3, 3-of-5, ['X25519', 'ML-KEM-1024', 'HQC-256'] -> OK
+[AUDIT] t5.ticket.json: epoch 1, T2, 2-of-3, ['X25519', 'ML-KEM-768', 'HQC-192'] -> NEEDS UPGRADE: uses deprecated ['HQC-192']
+[REWRAP] file key stays the same; new key-wrap epoch 2: tier T3, suite ['X25519', 'ML-KEM-1024', 'HQC-256'], 3-of-5 over 3 relay(s). Ciphertext is NOT touched.
+[SEND] 127.0.0.1:45347: stored 2 slot(s) epoch 2 (log #9)
+[SEND] 127.0.0.1:38689: stored 2 slot(s) epoch 2 (log #7)
+[SEND] 127.0.0.1:36835: stored 1 slot(s) epoch 2 (log #7)
+[REWRAP] done. Old-epoch slots remain on relays (they cannot be un-harvested).
+[AUDIT] 2 ticket(s), 1 need upgrade, 1 fixed
+[AUDIT] t30.ticket.json: epoch 1, T3, 3-of-5, ['X25519', 'ML-KEM-1024', 'HQC-256'] -> OK
+[AUDIT] t5.ticket.json: epoch 2, T3, 3-of-5, ['X25519', 'ML-KEM-1024', 'HQC-256'] -> OK
+[AUDIT] 2 ticket(s), 0 need upgrade, 0 fixed
+[POLICY] deprecated set is now: none
+
+===== Feature 3: rollback/downgrade attack - malicious relays hide the newer key-wrap epoch =====
+[RECV] 127.0.0.1:45347: 1 slot bundle(s); access logged (log entry #12)
+[RECV] 127.0.0.1:38689: 1 slot bundle(s); access logged (log entry #10)
+[RECV] 127.0.0.1:36835: 1 slot bundle(s); access logged (log entry #10)
+  -> rejected: ROLLBACK detected: you previously used epoch 2 of this package but the relays now only offer epoch 1. A relay may be replaying an old, weaker key-wrap...
+
+===== Feature 5: threshold decryption. 2-of-3 custodians (bob, carol, dave) =====
+[TRUST] trusted bob  a117d819 6b0b2085 708fcd33 370756dc
+[POLICY] exposure score 28/100 -> policy tier T1
+[POLICY]   must stay secret 3 years -> +28
+[SEND] suite ['X25519', 'ML-KEM-768']; 2-of-3 shares over 3 relay(s); custodian(s): bob, carol, dave
+[SEND] file 13500 B padded to 13824 B (Padme), 1 equal chunks
+[SEND] 127.0.0.1:45347: ciphertext stored (log #13)
+[SEND] 127.0.0.1:45347: stored 1 slot(s) epoch 1 (log #14)
+[SEND] 127.0.0.1:38689: stored 1 slot(s) epoch 1 (log #11)
+[SEND] 127.0.0.1:36835: stored 1 slot(s) epoch 1 (log #11)
+[SEND] ticket  : tb.ticket.json   (send this to the recipient over any channel)
+[SEND] receipts: tb.receipts.json   (4 log receipts, all valid)
+[SEND] security: < 2 relays learn nothing about the key (information-theoretic); breaking every KEM would additionally need >= 2 relays' data.
+[RECV] 127.0.0.1:45347: 1 slot bundle(s); access logged (log entry #15)
+[RECV] 127.0.0.1:38689: 1 slot bundle(s); access logged (log entry #12)
+[RECV] 127.0.0.1:36835: 1 slot bundle(s); access logged (log entry #12)
+  -> bob alone cannot open it: could not recover the key. epoch 1: have 1 share(s), need 2...
+[RECV] 127.0.0.1:45347: 1 slot bundle(s); access logged (log entry #16)
+[RECV] 127.0.0.1:38689: 1 slot bundle(s); access logged (log entry #13)
+[RECV] 127.0.0.1:36835: 1 slot bundle(s); access logged (log entry #13)
+[APPROVE] released my share for epoch 1 to bob
+[APPROVE] wrote carol.rel (encrypted to bob, signed by carol)
+[RECV] 127.0.0.1:45347: 1 slot bundle(s); access logged (log entry #17)
+[RECV] 127.0.0.1:38689: 1 slot bundle(s); access logged (log entry #14)
+[RECV] 127.0.0.1:36835: 1 slot bundle(s); access logged (log entry #14)
+[RECV] key recovered: epoch 1, tier T1, suite ['X25519', 'ML-KEM-768'], 2-of-3, approvals from ['carol']
+[RECV] sender verified: alice (c182bf61 e7af4b31 25715fff e26b1fd9)
+[RECV] file 'board-minutes.txt' 13500 bytes, signed by alice (Ed25519 + ML-DSA-65 valid)
+[RECV] decrypted chunk 1/1
+[RECV] INTEGRITY: every chunk authenticated, ciphertext + plaintext hashes match the signed manifest  ✔
+[RECV] saved to inbox3/board-minutes.txt
+
+===== Feature 5: append-only log monitor (consistency proofs) =====
+[MONITOR] first observation recorded: 18 entries, root 5c7a4eb1a0f13550...
+[RECV] 127.0.0.1:45347: 1 slot bundle(s); access logged (log entry #18)
+[RECV] 127.0.0.1:38689: 1 slot bundle(s); access logged (log entry #15)
+[RECV] 127.0.0.1:36835: 1 slot bundle(s); access logged (log entry #15)
+[RECV] key recovered: epoch 1, tier T3, suite ['X25519', 'ML-KEM-1024', 'HQC-256'], 3-of-5
+[RECV] sender verified: alice (c182bf61 e7af4b31 25715fff e26b1fd9)
+[RECV] file 'wallet-backup.key' 1300055 bytes, signed by alice (Ed25519 + ML-DSA-65 valid)
+[RECV] decrypted chunk 20/20
+[RECV] INTEGRITY: every chunk authenticated, ciphertext + plaintext hashes match the signed manifest  ✔
+[RECV] saved to inbox/wallet-backup_1.key
+[MONITOR] append-only verified: 18 -> 19 entries, old tree is a prefix of the new one ✔
+
+DEMO COMPLETE: all checks passed.
+
+real	0m11.430s
+user	0m5.880s
+sys	0m0.294s
